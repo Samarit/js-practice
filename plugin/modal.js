@@ -9,18 +9,28 @@ function _createModal(options) {
                 <span class="modal-title">${options.title || 'Default title'}</span>
                 ${options.closable ? `<span class="modal-close" data-close="true">&times;</span>` : ''}
             </div>
-            <div class="modal-body">${options.content || ''}</div>
-            <div class="modal-footer">
-                <button>OK</button>
-                <button>Cancel</button>
+            <div class="modal-body" data-content="true">
+                ${options.content || ''}
             </div>
         </div>
     </div>
     `)
+    const footer = _createModalFooter(options.footerButtons)
+
     document.body.appendChild(modal)
     return modal
 }
 
+function _createModalFooter (buttons = []) {
+    if (buttons.length === 0) {
+        return document.createElement('div')
+    }
+
+    const wrap = document.createElement('div')
+    wrap.classList.add('modal-footer')
+
+    return wrap
+}
 
 $.modal = function(options) {
    const $modal = _createModal(options);
@@ -58,6 +68,9 @@ $.modal = function(options) {
            $modal.parentNode.removeChild($modal)
            $modal.removeEventListener('click', listener)
            destroyed = true
+       },
+       setContent(html) {
+            $modal.querySelector('[data-content]').innerHTML = html
        }
    })
 }

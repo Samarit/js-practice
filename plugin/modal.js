@@ -1,3 +1,10 @@
+// Creating new method to append element after certain one
+Element.prototype.appendAfter = function (element) { // All elements now have this method from prototype
+    element.parentNode.insertBefore(this, element.nextSibling) // Taken from stackoverflow.com
+}
+
+function noop () {} // Empty function for buttons if there no handlers given 
+
 function _createModal(options) {
     const modal = document.createElement('div');
     const DEFAULT_WIDTH = '600px';
@@ -16,7 +23,7 @@ function _createModal(options) {
     </div>
     `)
     const footer = _createModalFooter(options.footerButtons)
-
+    footer.appendAfter(modal.querySelector('[data-content]'))
     document.body.appendChild(modal)
     return modal
 }
@@ -28,6 +35,16 @@ function _createModalFooter (buttons = []) {
 
     const wrap = document.createElement('div')
     wrap.classList.add('modal-footer')
+
+    buttons.forEach(btn => {
+        const $btn = document .createElement('button')
+        $btn.textContent = btn.text
+        $btn.classList.add('btn') //Bootstrap class
+        $btn.classList.add(`btn-${btn.type}` || 'secondary')
+        $btn.onclick = btn.handler || noop
+
+        wrap.appendChild($btn) 
+    })
 
     return wrap
 }

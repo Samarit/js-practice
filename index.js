@@ -8,10 +8,10 @@ let options = {
     width: '400px',
     footerButtons: [
         {text: 'Ok', type: 'primary', handler() {
-            console.log('Primary button clicked')
+            modal.close()
         }},
         {text: 'Cancel', type: 'danger', handler() {
-            console.log('Danger button clicked')
+            modal.close()
         }}
     ] 
 }

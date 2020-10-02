@@ -5,19 +5,12 @@ const fruits = [
 ]
 
 let options = {
-    title: 'My title',
+    title: 'Цена на продукт',
     closable: true,
-    content: `
-    <p>Modal is working</p>
-    <p>Lorem ipsum dolor sit.</p>
-    `,
     width: '400px',
     footerButtons: [
-        {text: 'Ok', type: 'primary', handler() {
-            modal.close()
-        }},
-        {text: 'Cancel', type: 'danger', handler() {
-            modal.close()
+        {text: 'Закрыть', type: 'primary', handler() {
+            priceModal.close()
         }}
     ] 
 }
@@ -28,8 +21,8 @@ const toHTML = fruit => `
              <img style='height: 300px;' src=${fruit.img} class="card-img-top">
              <div class="card-body">
                <h5 class="card-title">${fruit.title}</h5>
-               <a href="#" class="btn btn-primary">Посмотреть цену</a>
-               <a href="#" class="btn btn-danger">Удалить</a>
+               <a href="#" class="btn btn-primary" data-btn='price' data-id=${fruit.id}>Посмотреть цену</a>
+               <a href="#" class="btn btn-danger" data-btn='remove' data-id=${fruit.id}>Удалить</a>
              </div>
         </div>
     </div>
@@ -37,9 +30,34 @@ const toHTML = fruit => `
 
 function renderFruitList () {
     const html = fruits.map(toHTML).join('') // Reduced version of fruits.map(fruit => toHTML(fruit))
-   document.querySelector('#fruits').innerHTML = html
+    document.querySelector('#fruits').innerHTML = html
 }
 
 renderFruitList()
 
-const modal = $.modal(options);
+const priceModal = $.modal(options);
+
+document.addEventListener('click', event => {
+    event.preventDefault()
+    const btnType = event.target.dataset.btn
+    const id = +event.target.dataset.id
+    const fruit = fruits.find(f => f.id === id)
+    
+    if (btnType === 'price') {
+            priceModal.setContent(`
+            <p>Цена на ${fruit.title}: <strong>${fruit.price}$</strong></p>
+        `)
+        priceModal.open()
+        console.log('Price')
+        console.log(fruit)
+    } else if (btnType === 'remove') {
+        $.confirm({
+            title: 'Вы уверены?',
+            content: `<p>Вы удаляете фрукт: <strong>${fruit.title}</strong>`
+        }).then(() => {
+            console.log('Remove')
+        }).catch(() => {
+            console.log('Cancel')
+        })
+    }
+})

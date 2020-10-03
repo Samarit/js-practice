@@ -1,4 +1,4 @@
-const fruits = [
+let fruits = [
     {id: 1, title: 'Яблоко', price: 20, img: 'https://папироска.рф/wa-data/public/shop/products/31/10/1031/images/100165/100165.aromatizator-ngf---zelenoe-yabloko.500x0.jpg'},
     {id: 2, title: 'Апельсин', price: 30, img: 'https://eda.ru/img/eda/464x302i/s1.eda.ru/StaticContent/Photos/120214122930/120327165448/p_O.jpg'},
     {id: 3, title: 'Манго', price: 40, img: 'https://sbermarket.ru/spree/products/113521/preview/121699.jpg?1587401616'}
@@ -48,14 +48,14 @@ document.addEventListener('click', event => {
             <p>Цена на ${fruit.title}: <strong>${fruit.price}$</strong></p>
         `)
         priceModal.open()
-        console.log('Price')
-        console.log(fruit)
     } else if (btnType === 'remove') {
         $.confirm({
             title: 'Вы уверены?',
             content: `<p>Вы удаляете фрукт: <strong>${fruit.title}</strong>`
         }).then(() => {
             console.log('Remove')
+            fruits = fruits.filter(f => f.id !== id)
+            renderFruitList()
         }).catch(() => {
             console.log('Cancel')
         })
